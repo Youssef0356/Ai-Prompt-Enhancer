@@ -5,24 +5,25 @@ import google.generativeai as genai
 # ===============================
 # CONFIGURE YOUR API KEY
 # ===============================
-API_KEY = "YOUR_GEMINI_API_KEY_HERE"  # Replace with your Gemini API key
+API_KEY = "AIzaSyAEYftynJXvtM7hnTS3E19GKkpnjGfV-mI"  # Replace with your Gemini API key
 
 # ===============================
-# SYSTEM META-PROMPT (For Enhancing Prompts)
+# SYSTEM META-PROMPT
 # ===============================
 SYSTEM_INSTRUCTION = """
-You are an expert AI prompt engineer. Your job is to take a simple, high-level user request and transform it into a detailed, structured, and comprehensive blueprint for another AI model. The goal is to create a prompt so clear and specific that the target AI can produce a high-quality, professional response on the first attempt, minimizing the need for further clarification.
+You are an expert AI prompt engineer. Your job is to take a simple, high-level user request and transform it into a detailed, structured, and fully ordered blueprint for another AI model. 
 
-Follow these steps for every user request:
-
-1. **Analyze and Deconstruct**: Carefully break down the user's initial request. Identify the core objective, any implied context, and all explicit or implicit needs.
-2. **Create a Structured Blueprint**: Generate a logical, step-by-step plan. This blueprint should be an itemized list of tasks and sub-tasks required to fulfill the request. Think of it as a professional project plan.
-3. **Add Specificity and Technical Details**: For each task, enrich the description with crucial details. For code-related requests, specify the technology stack (e.g., Python, Node.js), frameworks (e.g., Flask, React), and other relevant libraries. For creative or writing tasks, define the tone, length, target audience, and desired format.
-4. **Format the Output**: Present the final enhanced prompt using clear Markdown. Use bold headings and lists to make the blueprint easy to read and copy.
-5. **Strict Constraint**: Do not perform the task described by the user; your sole function is to generate the enhanced prompt.
+Constraints:
+1. Do not write any conversational phrases, explanations, apologies, or headers.
+2. Do not summarize or introduce the output.
+3. Begin immediately with ordered, step-by-step instructions, tasks, or structured points.
+4. Format the output in clear Markdown using bold headings and lists.
+5. Enrich every task with technical details, examples, or specifications as needed.
+6. Never perform the user's request; only generate the enhanced prompt.
 
 Here is the user's simple request:
 """
+
 
 # ===============================
 # FUNCTION: Enhance Prompt
@@ -45,7 +46,7 @@ class PromptEnhancerGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("AI Prompt Enhancer")
-        self.root.geometry("600x500")
+        self.root.geometry("650x500")
         self.root.configure(bg="#1e1e1e")
         self.root.resizable(False, False)
 
@@ -71,7 +72,7 @@ class PromptEnhancerGUI:
         )
         self.input_label.pack(anchor="nw", padx=10)
         self.input_text = scrolledtext.ScrolledText(
-            root, height=6, width=70, bg="#252526", fg="#d4d4d4", insertbackground="#ffffff", font=("Consolas", 11)
+            root, height=6, width=75, bg="#252526", fg="#d4d4d4", insertbackground="#ffffff", font=("Consolas", 11)
         )
         self.input_text.pack(padx=10, pady=5)
 
@@ -99,7 +100,7 @@ class PromptEnhancerGUI:
         )
         self.output_label.pack(anchor="nw", padx=10)
         self.output_text = scrolledtext.ScrolledText(
-            root, height=10, width=70, bg="#252526", fg="#d4d4d4", font=("Consolas", 11)
+            root, height=12, width=75, bg="#252526", fg="#d4d4d4", font=("Consolas", 11)
         )
         self.output_text.pack(padx=10, pady=5)
 
