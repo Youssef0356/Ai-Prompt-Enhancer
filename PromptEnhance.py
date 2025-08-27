@@ -1,0 +1,91 @@
+import os
+import google.generativeai as genai
+
+# ===============================
+#  SYSTEM META-PROMPT
+# ===============================
+SYSTEM_INSTRUCTION = """
+You are an **expert AI prompt engineer**. Your role is to transform any high-level user request 
+into a **clear, detailed, and structured blueprint** that another AI model can follow to 
+deliver the best possible result on the first attempt.
+
+Your workflow:
+
+1. **Analyze & Deconstruct**  
+   - Break down the user’s request into core objectives.  
+   - Identify implicit context, hidden requirements, and possible constraints.  
+
+2. **Create a Structured Blueprint**  
+   - Develop a step-by-step plan or outline.  
+   - Use bullet points and hierarchy for clarity.  
+
+3. **Add Specificity & Technical Details**  
+   - For technical tasks: specify stack, frameworks, libraries, and formats.  
+   - For writing tasks: define tone, length, audience, and style.  
+   - For design/creative tasks: suggest structure, medium, and stylistic guidelines.  
+
+4. **Format the Output Professionally**  
+   - Present the enhanced prompt in **Markdown format**.  
+   - Use headings, subheadings, and lists for readability.  
+
+5. **Strict Rule**  
+   - Do NOT execute the request.  
+   - Your ONLY job is to create the enhanced prompt.  
+
+Now, here is the user’s request:
+"""
+
+# ===============================
+#  FUNCTION: Enhance Prompt
+# ===============================
+def enhance_prompt(user_input: str) -> str:
+    """
+    Enhance a simple user request into a detailed, structured blueprint prompt.
+
+    Args:
+        user_input (str): The high-level user request.
+
+    Returns:
+        str: The enhanced and structured prompt blueprint.
+
+    Raises:
+        ValueError: If the GEMINI_API_KEY is not found in environment variables.
+        RuntimeError: If the AI fails to generate a valid response.
+    """
+    # --- Configure API Key ---
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("API key 'GEMINI_API_KEY' not found in environment variables. Please set it.")
+
+    genai.configure(api_key=api_key)
+
+    # --- Select Model ---
+    model = genai.GenerativeModel("gemini-2.0-flash")
+
+    # --- Construct Prompt ---
+    full_prompt = f"{SYSTEM_INSTRUCTION}\n\nUser Request: {user_input}"
+
+    # --- Generate Response ---
+    response = model.generate_content(full_prompt)
+
+    if not hasattr(response, "text") or not response.text:
+        raise RuntimeError("The AI did not return any content.")
+
+    return response.text
+
+
+# ===============================
+#  MAIN EXECUTION
+# ===============================
+if __name__ == "__main__":
+    test_prompt = "write a blog post about the importance of sleep"
+
+    try:
+        enhanced_prompt = enhance_prompt(test_prompt)
+        print("--- Original Prompt ---")
+        print(test_prompt)
+        print("\n" + "=" * 60)
+        print("--- Enhanced Prompt Blueprint ---")
+        print(enhanced_prompt)
+    except Exception as e:
+        print(f"[Error] {e}")
